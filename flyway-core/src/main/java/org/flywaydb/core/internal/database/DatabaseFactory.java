@@ -35,6 +35,8 @@ import org.flywaydb.core.internal.database.h2.H2Database;
 import org.flywaydb.core.internal.database.h2.H2Parser;
 import org.flywaydb.core.internal.database.hsqldb.HSQLDBDatabase;
 import org.flywaydb.core.internal.database.hsqldb.HSQLDBParser;
+import org.flywaydb.core.internal.database.impala.ImpalaDatabase;
+import org.flywaydb.core.internal.database.impala.ImpalaParser;
 import org.flywaydb.core.internal.database.informix.InformixDatabase;
 import org.flywaydb.core.internal.database.informix.InformixParser;
 import org.flywaydb.core.internal.database.mysql.MySQLDatabase;
@@ -169,6 +171,8 @@ public class DatabaseFactory {
 
 
                 );
+            case IMPALA:
+                return new ImpalaDatabase(configuration, jdbcConnectionFactory);
             case INFORMIX:
                 return new InformixDatabase(configuration, jdbcConnectionFactory
 
@@ -296,6 +300,8 @@ public class DatabaseFactory {
                 return new H2Parser(configuration, parsingContext);
             case HSQLDB:
                 return new HSQLDBParser(configuration, parsingContext);
+            case IMPALA:
+                return new ImpalaParser(configuration, parsingContext);
             case INFORMIX:
                 return new InformixParser(configuration, parsingContext);
             case MARIADB:
