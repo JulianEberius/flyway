@@ -69,7 +69,10 @@ public abstract class Schema<S extends DbSupport> {
      */
     public boolean exists() {
         try {
-            return doExists();
+            boolean exists = doExists();
+            if (!jdbcTemplate.getConnection().getAutoCommit())
+                jdbcTemplate.getConnection().commit();
+            return exists;
         } catch (SQLException e) {
             throw new FlywayException("Unable to check whether schema " + this + " exists", e);
         }

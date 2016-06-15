@@ -171,6 +171,12 @@ public class PostgreSQLMigrationMediumTest extends MigrationTestCase {
         }
     }
 
+    @Test
+    public void concurrentIndexCreation() throws Exception {
+        flyway.setLocations("migration/dbsupport/postgresql/sql/concurrentIndex");
+        flyway.migrate();
+    }
+
     /**
      * Tests clean and migrate for PostgreSQL Stored Procedures.
      */

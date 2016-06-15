@@ -133,6 +133,12 @@ public class SqlMigrationResolver implements MigrationResolver {
             if (isSqlCallback(filename, suffix)) {
                 continue;
             }
+            SqlMigrationExecutor executor;
+            if (isNonTransactional(filename, suffix)) {
+                executor = new NTSqlMigrationExecutor(dbSupport, resource, placeholderReplacer, encoding);
+            } else {
+                executor = new SqlMigrationExecutor(dbSupport, resource, placeholderReplacer, encoding);
+            }
             Pair<MigrationVersion, String> info =
                     MigrationInfoHelper.extractVersionAndDescription(filename, prefix, separator, suffix);
 
@@ -143,10 +149,13 @@ public class SqlMigrationResolver implements MigrationResolver {
             migration.setChecksum(calculateChecksum(resource, resource.loadAsString(encoding)));
             migration.setType(MigrationType.SQL);
             migration.setPhysicalLocation(resource.getLocationOnDisk());
-            migration.setExecutor(new SqlMigrationExecutor(dbSupport, resource, placeholderReplacer, encoding));
+
+            migration.setExecutor(executor);
             migrations.add(migration);
         }
     }
+
+
 
     /**
      * Checks whether this filename is actually a sql-based callback instead of a regular migration.
@@ -159,6 +168,19 @@ public class SqlMigrationResolver implements MigrationResolver {
     static boolean isSqlCallback(String filename, String suffix) {
         String baseName = filename.substring(0, filename.length() - suffix.length());
         return SqlScriptFlywayCallback.ALL_CALLBACKS.contains(baseName);
+    }
+
+    /**
+     * Checks whether this filename is a non-transactional migration instead of a regular migration.
+     *
+     * @param filename The filename to check.
+     * @param suffix   The sql migration separator.
+     * @return {@code true} if it is, {@code false} if it isn't.
+     */
+    static boolean isNonTransactional(String filename, String suffix) {
+        String lastTwoChars = filename.substring(filename.length() - (suffix.length() + 2),
+                filename.length() - suffix.length());
+        return lastTwoChars.equals(NTSqlMigrationExecutor.NON_TRANSACTIONAL_MARKER);
     }
 
     /**

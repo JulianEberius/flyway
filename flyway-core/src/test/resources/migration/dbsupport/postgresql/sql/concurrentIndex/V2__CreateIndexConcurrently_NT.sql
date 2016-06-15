@@ -1,0 +1,1 @@
+CREATE INDEX CONCURRENTLY ON concurrent_index_test (a);
