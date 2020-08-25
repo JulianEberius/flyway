@@ -50,7 +50,8 @@ public enum DatabaseType {
     SYBASEASE_JCONNECT("Sybase ASE", Types.VARCHAR, true),
     SAPHANA("SAP HANA", Types.VARCHAR, true),
     SNOWFLAKE("Snowflake", Types.VARCHAR, false),
-    IMPALA("Impala", Types.NULL, false);
+    IMPALA("Impala", Types.NULL, false),
+    BIGQUERY("BigQuery", Types.NULL, false);
 
     private final String name;
 
@@ -146,6 +147,9 @@ public enum DatabaseType {
         }
         if (databaseProductName.startsWith("Impala")) {
             return IMPALA;
+        }
+        if (databaseProductName.startsWith("Google BigQuery")) {
+            return BIGQUERY;
         }
 
         throw new FlywayException("Unsupported Database: " + databaseProductName);

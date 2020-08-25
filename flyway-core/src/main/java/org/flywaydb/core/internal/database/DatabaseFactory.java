@@ -21,6 +21,8 @@ import org.flywaydb.core.api.logging.Log;
 import org.flywaydb.core.api.logging.LogFactory;
 import org.flywaydb.core.internal.callback.CallbackExecutor;
 import org.flywaydb.core.internal.database.base.Database;
+import org.flywaydb.core.internal.database.bigquery.BigQueryDatabase;
+import org.flywaydb.core.internal.database.bigquery.BigQueryParser;
 import org.flywaydb.core.internal.database.cockroachdb.CockroachDBDatabase;
 import org.flywaydb.core.internal.database.cockroachdb.CockroachDBParser;
 import org.flywaydb.core.internal.database.cockroachdb.CockroachDBRetryingStrategy;
@@ -173,6 +175,8 @@ public class DatabaseFactory {
                 );
             case IMPALA:
                 return new ImpalaDatabase(configuration, jdbcConnectionFactory);
+            case BIGQUERY:
+                return new BigQueryDatabase(configuration, jdbcConnectionFactory);
             case INFORMIX:
                 return new InformixDatabase(configuration, jdbcConnectionFactory
 
@@ -302,6 +306,8 @@ public class DatabaseFactory {
                 return new HSQLDBParser(configuration, parsingContext);
             case IMPALA:
                 return new ImpalaParser(configuration, parsingContext);
+            case BIGQUERY:
+                return new BigQueryParser(configuration, parsingContext);
             case INFORMIX:
                 return new InformixParser(configuration, parsingContext);
             case MARIADB:

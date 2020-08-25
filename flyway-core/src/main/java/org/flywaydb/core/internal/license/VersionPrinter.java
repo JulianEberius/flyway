@@ -89,7 +89,7 @@ public class VersionPrinter {
     }
 
     public static void printVersionOnly() {
-        LOG.info(EDITION + " " + version + " by Redgate");
+        LOG.info(EDITION + " " + version + " by JE");
     }
 
 
